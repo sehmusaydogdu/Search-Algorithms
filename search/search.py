@@ -166,7 +166,7 @@ def uniformCostSearch(problem):
             if not child_node[0] in visited:
                 node = child_node[0]
                 path = current_node[1] + [child_node[1]]
-                cost = child_node[2]
+                cost = child_node[2]+current_node[2]
                 priorityQueue.push((node,path,cost),cost)
                 visited.append(node)
 
