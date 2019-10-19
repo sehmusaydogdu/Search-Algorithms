@@ -151,7 +151,7 @@ def uniformCostSearch(problem):
     priorityQueue = util.PriorityQueue()
 
     start_node = problem.getStartState()
-    priorityQueue.update((start_node,[],0),0)
+    priorityQueue.push((start_node,[],0),0)
 
     while not priorityQueue.isEmpty():
         current_node = priorityQueue.pop()
@@ -167,7 +167,7 @@ def uniformCostSearch(problem):
                    node = child_node[0]
                    path = current_node[1] + [child_node[1]]
                    cost = child_node[2] + current_node[2]
-                   priorityQueue.update((node, path, cost), cost)
+                   priorityQueue.push((node, path, cost), cost)
            visited.add(current_node[0])
 
     return result_path
@@ -182,8 +182,35 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
 
+    visited = set()
+    result_path = None
+
+    priorityQueue = util.PriorityQueue()
+
+    start_node = problem.getStartState()
+    priorityQueue.push((start_node, [], 0, 0),0)
+
+    while not priorityQueue.isEmpty():
+        current_node = priorityQueue.pop()
+
+        if problem.isGoalState(current_node[0]):
+            result_path = current_node[1]
+            break
+
+        if not current_node[0] in visited:
+            child_list = problem.getSuccessors(current_node[0])
+            for child_node in child_list:
+                if not child_node[0] in visited:
+                    node = child_node[0]
+                    path = current_node[1] + [child_node[1]]
+                    cost = child_node[2] + current_node[3]
+                    heuristicCost = cost + heuristic(node,problem)
+                    temp = (node,path,heuristicCost,cost)
+                    priorityQueue.push(temp, temp[2])
+            visited.add(current_node[0])
+
+    return result_path
 
 # Abbreviations
 bfs = breadthFirstSearch
