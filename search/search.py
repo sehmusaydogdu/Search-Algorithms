@@ -16,6 +16,7 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
+from functools import partial
 
 import util
 
@@ -61,7 +62,6 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
-
 def tinyMazeSearch(problem):
     """
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
@@ -105,9 +105,8 @@ def depthFirstSearch(problem):
         child_list = problem.getSuccessors(current_node[0])
         for child_node in child_list:
             if not child_node[0] in visited:
-                list = [child_node[1]]
                 node = child_node[0]
-                path = current_node[1]+ list
+                path = current_node[1]+ [child_node[1]]
                 cost = child_node[2]
                 stack.push((node,path,cost))
 
@@ -146,13 +145,13 @@ def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
 
-    visited = []
+    visited = set()
     result_path = None
+
     priorityQueue = util.PriorityQueue()
 
     start_node = problem.getStartState()
-    priorityQueue.push((start_node,[],0),0)
-    visited.append(start_node)
+    priorityQueue.update((start_node,[],0),0)
 
     while not priorityQueue.isEmpty():
         current_node = priorityQueue.pop()
@@ -161,14 +160,15 @@ def uniformCostSearch(problem):
             result_path = current_node[1]
             break
 
-        child_list = problem.getSuccessors(current_node[0])
-        for child_node in child_list:
-            if not child_node[0] in visited:
-                node = child_node[0]
-                path = current_node[1] + [child_node[1]]
-                cost = child_node[2]+current_node[2]
-                priorityQueue.push((node,path,cost),cost)
-                visited.append(node)
+        if not current_node[0] in visited:
+           child_list = problem.getSuccessors(current_node[0])
+           for child_node in child_list:
+               if not child_node[0] in visited:
+                   node = child_node[0]
+                   path = current_node[1] + [child_node[1]]
+                   cost = child_node[2] + current_node[2]
+                   priorityQueue.update((node, path, cost), cost)
+           visited.add(current_node[0])
 
     return result_path
 
