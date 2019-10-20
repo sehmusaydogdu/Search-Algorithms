@@ -184,7 +184,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
 
     visited = set()
-    result_path = None
+    result_path = []
 
     priorityQueue = util.PriorityQueue()
 
