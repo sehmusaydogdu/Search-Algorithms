@@ -401,7 +401,7 @@ def cornersHeuristic(state, problem):
     cornerVisited = state[1]
     for corner in cornerVisited:
         if corner == False:
-            result+=1
+            result = result + 1
     return result
 
 class AStarCornersAgent(SearchAgent):
