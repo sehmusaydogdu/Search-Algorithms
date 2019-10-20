@@ -349,19 +349,19 @@ class CornersProblem(search.SearchProblem):
             for item in cornerVisitList:
                 nextCornerVisitedList.append(item)
 
-            if not hitsWall:
+            if hitsWall == False:
                 cornerCount = 0
                 for corner in self.corners:
-                    if ((nextX, nextY) == corner):
+                    if nextX == corner[0] and nextY == corner[1]:
                         break
                     cornerCount += 1
 
-                if (cornerCount < 4):
+                if cornerCount <= 3:
                     nextCornerVisitedList[cornerCount] = True
 
-                nextState = ((nextX, nextY), nextCornerVisitedList)
-                cost = 1
-                successors.append((nextState, action, cost))
+                coordinat = (nextX, nextY)
+                nextState = (coordinat, nextCornerVisitedList)
+                successors.append((nextState, action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -398,8 +398,8 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***  EDIT"
     result = 0
-    corners_visited = state[1]
-    for corner in corners_visited:
+    cornerVisited = state[1]
+    for corner in cornerVisited:
         if corner == False:
             result+=1
     return result
@@ -497,17 +497,15 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***  EDIT"
 
-    heuristic = 0
-    food = foodGrid.asList()
+    result = 0
+    startCoordinat =  problem.startingGameState
+    foodList = foodGrid.asList()
 
-    if len(food) == 0:
-        return 0
-
-    for f in food:
-        distance = mazeDistance(position, f, problem.startingGameState)
-        if distance > heuristic:
-            heuristic = distance
-    return heuristic
+    for f in foodList:
+        distance = mazeDistance(position, f, startCoordinat)
+        if distance > result:
+            result = distance
+    return result
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
