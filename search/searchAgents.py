@@ -503,8 +503,8 @@ def foodHeuristic(state, problem):
     if len(food) == 0:
         return 0
 
-    for food in food:
-        distance = mazeDistance(position, food, problem.startingGameState)
+    for f in food:
+        distance = mazeDistance(position, f, problem.startingGameState)
         if distance > heuristic:
             heuristic = distance
     return heuristic
